@@ -12,9 +12,7 @@ class EsbuildGradlePlugin : Plugin<Project> {
 
     companion object {
         /**
-         * This is not good I guess, maybe failed in subproject
-         * gradle make subproject hierarchy piece of sh*t
-         * time to make a build system? lol
+         * Need test with subprojects
          **/
         lateinit var project: Project
         lateinit var dsl: EsbuildDsl
