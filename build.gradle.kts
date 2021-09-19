@@ -30,7 +30,7 @@ gradlePlugin {
 
 pluginBundle {
     website = "https://eridani.club"
-    vcsUrl = "https://github.com/SexyTeam/esbuild-gradle"
+    vcsUrl = "https://github.com/SexyTeam/EsBuildGradle"
     tags = listOf("Kotlin", "Kotlin/JS", "javascript", "esbuild")
 }
 
