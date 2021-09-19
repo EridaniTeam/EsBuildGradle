@@ -42,7 +42,7 @@ fun Project.init() {
 
         esbuildCmd = when (hostOs) {
             OS.Windows -> File(esbuildFolder, "esbuild.cmd")
-            else -> File(esbuildFolder, "esbuild.cmd")
+            else -> File(esbuildFolder, "esbuild")
         }
 
         val installEsbuild = tasks.create("installEsbuild", Exec::class.java) {
