@@ -57,14 +57,10 @@ publishing {
     publications {
         create<MavenPublication>("pluginMaven") {
             artifactId = project.name.toLowerCase()
-
-//            from(project.components["kotlin"])
         }
 
         create<MavenPublication>("maven") {
             artifactId = project.name.toLowerCase()
-
-//            from(project.components["kotlin"])
         }
     }
 }
