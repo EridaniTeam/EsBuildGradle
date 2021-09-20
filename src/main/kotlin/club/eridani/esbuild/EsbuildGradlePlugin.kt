@@ -49,6 +49,11 @@ fun Project.init() {
                 onlyIf { !esbuildCmd.exists() }
                 val esbuildVersion = dsl.esbuildVersion
                 afterEvaluate {
+                    val path = when (hostOs) {
+                        OS.Windows -> "\"${environment["PATH"]}\";${env.nodeDir}"
+                        else -> "\"${environment["PATH"]}\":${env.nodeDir}"
+                    }
+                    environment("PATH", path)
                     commandLine(npmCmd,
                         "-g",
                         "install",

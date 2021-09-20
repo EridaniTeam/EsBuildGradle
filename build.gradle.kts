@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "club.eridani"
-version = "0.0.2"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
@@ -39,6 +39,32 @@ publishing {
         maven {
             name = "localPluginRepository"
             url = uri("file://${System.getProperty("user.home")}/eskid_maven")
+        }
+
+        maven("https://maven.pkg.github.com/SexyTeam/EsBuildGradle") {
+            name = "Github"
+            val githubProperty = runCatching {
+                org.jetbrains.kotlin.konan.properties.loadProperties("${projectDir.absolutePath}/github.properties")
+            }.getOrNull()
+
+            credentials {
+                username = githubProperty?.getProperty("username") ?: System.getenv("USERNAME")
+                password = githubProperty?.getProperty("token") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("pluginMaven") {
+            artifactId = project.name.toLowerCase()
+
+//            from(project.components["kotlin"])
+        }
+
+        create<MavenPublication>("maven") {
+            artifactId = project.name.toLowerCase()
+
+//            from(project.components["kotlin"])
         }
     }
 }
