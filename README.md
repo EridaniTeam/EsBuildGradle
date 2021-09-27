@@ -19,9 +19,7 @@ Might be useful if something inside this plugin makes you confused
 ```kotlin
 // build.gradle.kts
 plugins {
-    // other plugins
-    // it will be on gradle plugin portal soon
-    id("club.eridani.esbuild-gradle") version "0.0.1"
+    id("club.eridani.esbuild-gradle") version "0.1.0"
 }
 ```
 
