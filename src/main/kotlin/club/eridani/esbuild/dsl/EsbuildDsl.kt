@@ -7,10 +7,19 @@ import org.gradle.api.plugins.ExtensionAware
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsBrowserDsl
 
 abstract class EsbuildDsl : ExtensionAware {
-    var esbuildVersion: String = "0.12.28"
+    var esbuildVersion: String = "0.13.2"
+    // It should be browser only because I didn't test nodejs yet
+
+    var platform : Platform? = null
 
     val externals = mutableListOf<String>()
 
+    val extraArgs = mutableListOf<String>()
+
+}
+
+enum class Platform {
+    Browser, NodeJS
 }
 
 /**

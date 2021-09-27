@@ -1,6 +1,7 @@
 package club.eridani.esbuild
 
 import club.eridani.esbuild.dsl.EsbuildDsl
+import club.eridani.esbuild.dsl.Platform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
@@ -21,7 +22,7 @@ class EsbuildGradlePlugin : Plugin<Project> {
 
         val env by lazy { NodeJsRootPlugin.apply(project.rootProject).requireConfigured() }
 
-        val npmCmd by lazy { File(env.nodeDir, if (env.isWindows) "npm.cmd" else "npm") }
+        val npmCmd by lazy { File(env.nodeDir.absolutePath + (if (env.isWindows) "/npm.cmd" else "/bin/npm")) }
     }
 
     override fun apply(target: Project) {
@@ -51,7 +52,7 @@ fun Project.init() {
                 afterEvaluate {
                     val path = when (hostOs) {
                         OS.Windows -> "\"${environment["PATH"]}\";${env.nodeDir}"
-                        else -> "\"${environment["PATH"]}\":${env.nodeDir}"
+                        else -> "\"${environment["PATH"]}\":${env.nodeDir.absolutePath}/bin"
                     }
                     environment("PATH", path)
                     commandLine(npmCmd,
@@ -102,14 +103,16 @@ fun Project.init() {
 
                         val path = when (hostOs) {
                             OS.Windows -> "\"${environment["PATH"]}\";${env.nodeDir}"
-                            else -> "\"${environment["PATH"]}\":${env.nodeDir}"
+                            else -> "\"${environment["PATH"]}\":${env.nodeDir.absolutePath}/bin"
                         }
+                        workingDir = File(buildDir.absolutePath + "/js/")
                         environment("PATH", path)
+                        environment("NODE_PATH", buildDir.absolutePath + "/js/node_modules/")
 
                         val cmd = mutableListOf(
                             esbuildCmd.absolutePath,
                             jsPath.absolutePath,
-                            "--outfile=${File(outFolder, "${project.name}.js")}",
+                            "--outfile=${File(outFolder, "${project.name}.js").absolutePath}",
                             "--bundle",
                             "--minify",
                             "--sourcemap=external"
@@ -118,6 +121,17 @@ fun Project.init() {
                         dsl.externals.forEach {
                             cmd.add("--external:$it")
                         }
+
+                        dsl.platform?.let {
+                            when(it) {
+                                Platform.Browser -> cmd.add("--platform=browser")
+                                Platform.NodeJS -> cmd.add("--platform=node")
+                            }
+                        }
+
+
+
+                        cmd.addAll(dsl.extraArgs)
 
                         commandLine(cmd)
                     }
